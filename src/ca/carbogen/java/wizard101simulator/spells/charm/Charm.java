@@ -12,6 +12,7 @@ public abstract class Charm implements Spell
 	public final void cast(Entity caster, Entity castee)
 	{
 		castee.addCharm(this, caster);
+		caster.removePips(getCost());
 	}
 
 	public abstract double getValue();

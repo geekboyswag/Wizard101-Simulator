@@ -12,6 +12,7 @@ import ca.carbogen.java.wizard101simulator.spells.damage.ice.Spell_FrostBeetle;
 import ca.carbogen.java.wizard101simulator.spells.damage.life.Spell_Imp;
 import ca.carbogen.java.wizard101simulator.spells.damage.myth.Spell_BloodBat;
 import ca.carbogen.java.wizard101simulator.spells.damage.storm.Spell_ThunderSnake;
+import ca.carbogen.java.wizard101simulator.spells.regeneration.RegenerationSpell;
 import ca.carbogen.java.wizard101simulator.spells.ward.Ward;
 
 import java.util.Random;
@@ -21,11 +22,12 @@ import java.util.Random;
  */
 public class Methods
 {
+	@Deprecated
 	public static EntityAI getEntityAI(Entity e)
 	{
 		if(!(e instanceof Entity_Player))
 		{
-			return new EntityAI(e);
+			return EntityAI.getEntityAI(e);
 		}
 
 		return null;
@@ -34,7 +36,8 @@ public class Methods
 	public static boolean isPositive(Spell spell)
 	{
 		if((spell instanceof Charm && ((Charm) spell).getValue() >= 1)
-				|| spell instanceof Ward && ((Ward) spell).getValue() < 1)
+				|| spell instanceof Ward && ((Ward) spell).getValue() < 1
+				|| spell instanceof RegenerationSpell)
 			return true;
 
 		return false;

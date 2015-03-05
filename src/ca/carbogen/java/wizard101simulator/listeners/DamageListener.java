@@ -1,6 +1,6 @@
 package ca.carbogen.java.wizard101simulator.listeners;
 
-import ca.carbogen.java.wizard101simulator.Methods;
+import ca.carbogen.java.wizard101simulator.entity.EntityAI;
 import ca.carbogen.java.wizard101simulator.event.EventHandler;
 import ca.carbogen.java.wizard101simulator.event.Listener;
 import ca.carbogen.java.wizard101simulator.event.entity.EntityDamageByEntityEvent;
@@ -27,8 +27,8 @@ public class DamageListener implements Listener
 			event.getDamagee().removeWard(w.getClass());
 		}
 
-		if(Methods.getEntityAI(event.getDamagee()) != null)
-			Methods.getEntityAI(event.getDamagee()).increaseThreat(event.getDamager(), event.getDamage());
+		if(EntityAI.getEntityAI(event.getDamagee()) != null)
+			EntityAI.getEntityAI(event.getDamagee()).increaseThreat(event.getDamager(), event.getDamage());
 
 		System.out.println(event.getDamager().getName() + " hit "
 				+ event.getDamagee().getName() + " with "

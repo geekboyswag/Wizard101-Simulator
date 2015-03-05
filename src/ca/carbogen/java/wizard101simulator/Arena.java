@@ -3,6 +3,7 @@ package ca.carbogen.java.wizard101simulator;
 import ca.carbogen.java.wizard101simulator.entity.Entity;
 import ca.carbogen.java.wizard101simulator.entity.EntityAI;
 import ca.carbogen.java.wizard101simulator.spells.Spell;
+import ca.carbogen.java.wizard101simulator.spells.regeneration.RegenerationSpell;
 
 import java.util.Arrays;
 
@@ -29,6 +30,14 @@ public class Arena
 
 	public void runRound()
 	{
+		for(Entity e : side1)
+			if(e != null)
+				e.addPip();
+
+		for(Entity e : side2)
+			if(e != null)
+				e.addPip();
+
 		System.out.println("\n");
 		System.out.println(Arrays.asList(side1));
 		System.out.println(Arrays.asList(side2));
@@ -43,9 +52,9 @@ public class Arena
 				continue;
 			}
 
-			if(Methods.getEntityAI(e) != null)
+			if(EntityAI.getEntityAI(e) != null)
 			{
-				EntityAI ai = Methods.getEntityAI(e);
+				EntityAI ai = EntityAI.getEntityAI(e);
 
 				ai.updateThreats();
 
@@ -53,7 +62,18 @@ public class Arena
 
 				if(Methods.isPositive(spell))
 				{
-					spell.cast(e, e);
+					spell.cast(e, ai.getVulnerableAlly(side1));
+
+					if(spell instanceof RegenerationSpell)
+					{
+						for(Entity en : side2)
+						{
+							if(EntityAI.getEntityAI(en) != null)
+							{
+								EntityAI.getEntityAI(en).increaseThreat(e, ((RegenerationSpell) spell).healValue());
+							}
+						}
+					}
 
 					break;
 				}
@@ -88,9 +108,9 @@ public class Arena
 				continue;
 			}
 
-			if(Methods.getEntityAI(e) != null)
+			if(EntityAI.getEntityAI(e) != null)
 			{
-				EntityAI ai = Methods.getEntityAI(e);
+				EntityAI ai = EntityAI.getEntityAI(e);
 
 				ai.updateThreats();
 
@@ -98,7 +118,18 @@ public class Arena
 
 				if(Methods.isPositive(spell))
 				{
-					spell.cast(e, e);
+					spell.cast(e, ai.getVulnerableAlly(side2));
+
+					if(spell instanceof RegenerationSpell)
+					{
+						for(Entity en : side1)
+						{
+							if(EntityAI.getEntityAI(en) != null)
+							{
+								EntityAI.getEntityAI(en).increaseThreat(e, ((RegenerationSpell) spell).healValue());
+							}
+						}
+					}
 
 					break;
 				}

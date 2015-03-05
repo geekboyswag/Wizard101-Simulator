@@ -1,9 +1,11 @@
 package ca.carbogen.java.wizard101simulator.entity;
 
+import ca.carbogen.java.wizard101simulator.Methods;
 import ca.carbogen.java.wizard101simulator.Pip;
 import ca.carbogen.java.wizard101simulator.School;
 import ca.carbogen.java.wizard101simulator.event.entity.EntityCharmEntityEvent;
 import ca.carbogen.java.wizard101simulator.event.entity.EntityDamageByEntityEvent;
+import ca.carbogen.java.wizard101simulator.event.entity.EntityHealEntityEvent;
 import ca.carbogen.java.wizard101simulator.event.entity.EntityWardEntityEvent;
 import ca.carbogen.java.wizard101simulator.spells.Spell;
 import ca.carbogen.java.wizard101simulator.spells.charm.Charm;
@@ -54,12 +56,37 @@ public abstract class Entity
 	{
 		EntityDamageByEntityEvent e = new EntityDamageByEntityEvent(this, damager, spell, damage);
 		e.fire();
-		setHealth(getHealth() - e.getDamage());
+		setHealth((getHealth() - e.getDamage() >= 0) ? getHealth() - e.getDamage() : 0);
+	}
+
+	public void heal(int health, Spell spell, Entity healer)
+	{
+		EntityHealEntityEvent e = new EntityHealEntityEvent(this, healer, spell, health);
+		e.fire();
+		setHealth((getHealth() + e.getHealth() <= getMaxHealth()) ? getHealth() + e.getHealth() : getMaxHealth());
 	}
 
 	public List<Pip> getPips()
 	{
 		return this.currentPips;
+	}
+
+	public void addPip()
+	{
+		if(isDead())
+		{
+			getPips().clear();
+			return;
+		}
+
+		if(getPips().size() >= 7)
+			return;
+
+		if(Methods.generateRandomInteger(100) < 30)
+			getPips().add(new Pip(true));
+
+		else
+			getPips().add(new Pip(false));
 	}
 
 	public void addPips(int amount)
@@ -70,13 +97,27 @@ public abstract class Entity
 		}
 	}
 
+	public boolean onlyHasPowerPips()
+	{
+		for(Pip pip : getPips())
+			if(!pip.isPowerPip())
+				return false;
+
+		return true;
+	}
+
 	public void removePips(int amount)
 	{
 		while(amount > 0)
 		{
+			if(onlyHasPowerPips())
+			{
+				amount *= 2;
+			}
+
 			for(int i = 0; i < getPips().size(); i++)
 			{
-				if(getPips().get(i).getValue() < amount)
+				if(getPips().get(i).getValue() <= amount)
 				{
 					amount -= getPips().get(i).getValue();
 					getPips().remove(i);
@@ -84,6 +125,16 @@ public abstract class Entity
 				}
 			}
 		}
+	}
+
+	public int countPips()
+	{
+		int count = 0;
+
+		for(Pip pip : getPips())
+			count += pip.getValue();
+
+		return count;
 	}
 
 	public List<Ward> getWards() { return this.orbitingWards; }
@@ -173,7 +224,7 @@ public abstract class Entity
 
 	public String toString()
 	{
-		return this.getName() + "(" + ((this.getHealth() > 0) ? this.getHealth() : "dead") + ")";
+		return this.getName() + "(" + ((this.getHealth() > 0) ? this.getHealth() : "dead") + "[" + countPips() + "])";
 	}
 
 	public abstract List<Spell> getSpellList();

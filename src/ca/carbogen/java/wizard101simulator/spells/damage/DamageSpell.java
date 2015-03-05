@@ -15,5 +15,6 @@ public abstract class DamageSpell implements Spell
 	public final void cast(Entity caster, Entity castee)
 	{
 		castee.damage(getDamage()[Methods.generateRandomInteger(getDamage().length)], this, caster);
+		caster.removePips(getCost());
 	}
 }

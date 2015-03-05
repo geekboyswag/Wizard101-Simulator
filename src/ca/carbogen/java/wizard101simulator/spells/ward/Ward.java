@@ -20,5 +20,6 @@ public abstract class Ward implements Spell
 	public final void cast(Entity caster, Entity castee)
 	{
 		castee.addWard(this, caster);
+		caster.removePips(getCost());
 	}
 }
