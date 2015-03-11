@@ -58,11 +58,11 @@ public class EntityAI
 	public Entity getVulnerableAlly(Entity[] allies)
 	{
 		Entity vulnerable = null;
-		int lowestHealth = Integer.MAX_VALUE;
+		int lowestHealth = -1;
 
 		for(Entity e : allies)
 		{
-			if(e != null && !e.isDead() && e.getHealth() < lowestHealth)
+			if(e != null && !e.isDead() && (e.getMaxHealth() - e.getHealth()) > lowestHealth)
 			{
 				lowestHealth = e.getHealth();
 				vulnerable = e;

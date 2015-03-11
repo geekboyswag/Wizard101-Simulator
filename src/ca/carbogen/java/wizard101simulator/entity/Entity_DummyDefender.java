@@ -36,7 +36,13 @@ public class Entity_DummyDefender extends Entity
 	@Override
 	public int getMaxHealth()
 	{
-		return 200;
+		return 100;
+	}
+
+	@Override
+	public void setupResists()
+	{
+		getResistances().put(School.UNIVERSAL, 0.1);
 	}
 
 	@Override

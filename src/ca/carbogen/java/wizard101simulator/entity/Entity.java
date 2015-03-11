@@ -12,6 +12,7 @@ import ca.carbogen.java.wizard101simulator.spells.charm.Charm;
 import ca.carbogen.java.wizard101simulator.spells.ward.Ward;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -25,11 +26,17 @@ public abstract class Entity
 	private List<Pip> currentPips = new ArrayList<Pip>();
 	private List<Charm> orbitingCharms = new ArrayList<Charm>();
 	private List<Ward> orbitingWards = new ArrayList<Ward>();
+	private HashMap<School, Double> resistance = new HashMap<School, Double>();
+	private HashMap<School, Double> damage = new HashMap<School, Double>();
 
 	public Entity(String name)
 	{
 		this.name = name;
 		this.currentHealth = this.getMaxHealth();
+
+		setupDefaultStats();
+		setupDamages();
+		setupResists();
 	}
 
 	public void setHealth(int value)
@@ -227,7 +234,40 @@ public abstract class Entity
 		return this.getName() + "(" + ((this.getHealth() > 0) ? this.getHealth() : "dead") + "[" + countPips() + "])";
 	}
 
+	public void setupDefaultStats()
+	{
+		getDamages().put(School.BALANCE, 0.0);
+		getDamages().put(School.DEATH, 0.0);
+		getDamages().put(School.FIRE, 0.0);
+		getDamages().put(School.ICE, 0.0);
+		getDamages().put(School.LIFE, 0.0);
+		getDamages().put(School.MYTH, 0.0);
+		getDamages().put(School.STORM, 0.0);
+		getDamages().put(School.UNIVERSAL, 0.0);
+
+		getResistances().put(School.BALANCE, 0.0);
+		getResistances().put(School.DEATH, 0.0);
+		getResistances().put(School.FIRE, 0.0);
+		getResistances().put(School.ICE, 0.0);
+		getResistances().put(School.LIFE, 0.0);
+		getResistances().put(School.MYTH, 0.0);
+		getResistances().put(School.STORM, 0.0);
+		getResistances().put(School.UNIVERSAL, 0.0);
+	}
+
 	public abstract List<Spell> getSpellList();
 	public abstract int getMaxHealth();
 	public abstract School getSchool();
+	public void setupDamages() {}
+	public void setupResists() {}
+
+	public HashMap<School, Double> getResistances()
+	{
+		return resistance;
+	}
+
+	public HashMap<School, Double> getDamages()
+	{
+		return damage;
+	}
 }

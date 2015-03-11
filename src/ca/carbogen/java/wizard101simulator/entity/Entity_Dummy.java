@@ -46,6 +46,12 @@ public class Entity_Dummy extends Entity
 	}
 
 	@Override
+	public void setupDamages()
+	{
+		getDamages().put(School.BALANCE, 0.1);
+	}
+
+	@Override
 	public int getMaxHealth()
 	{
 		return 500;

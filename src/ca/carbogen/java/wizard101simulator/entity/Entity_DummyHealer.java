@@ -39,6 +39,12 @@ public class Entity_DummyHealer extends Entity
 	}
 
 	@Override
+	public void setupResists()
+	{
+		getResistances().put(School.LIFE, 0.4);
+	}
+
+	@Override
 	public School getSchool()
 	{
 		return School.LIFE;
